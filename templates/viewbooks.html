@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% for book in bookList %}
+
+<div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+    <div class="card-header">
+        
+        
+        <p>Book No. {{ book[0] }}</p>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title"><b>{{ book[1].upper() }}</b></h5>
+      <p class="card-text">
+        By {{ book[2].title() }}. {{ book[3] }} pages.<br>
+        {% if book[4] == 'True' %}
+            Not Finished
+        {% else %}
+            Finished
+        {% endif %}
+    </p>
+    <center>
+    {% if book[4] == 'True' %}
+    
+            <a href="/setbookstatus?bookid={{ book[0] }}&currentstatus=True" role="button" class="btn btn-dark">
+                <i class="material-icons" aria-hidden="true">menu_book</i>
+            </a>
+        {% else %}
+            <a href="/setbookstatus?bookid={{ book[0] }}&currentstatus=False" role="button" class="btn btn-dark">
+                <i class="material-icons">done_all</i></a>
+        {% endif %}
+    
+        <a href="/deletebook?bookid={{ book[0] }}" role="button" class="btn btn-dark">
+            <i class="material-icons" aria-hidden="true">delete</i>
+        </a>
+    
+    </center>
+
+    </div>
+</div>
+{% endfor %}
+<a href="/" class="btn btn-dark" role="button" aria-pressed="true">Refresh</a>
+<a href="/bookentry" class="btn btn-dark" role="button" aria-pressed="true">Add Book</a>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+<form action='/addbook' method='post'>
+
+    <div class="form-group">
+        <label for="titleInput">Book Title</label>
+        <input type="text" class="form-control" id="title" name="title">
+    </div>
+
+    <div class="form-group">
+        <label for="titleInput">Book Author</label>
+        <input type="text" class="form-control" id="author" name="author">
+    </div>
+
+    <div class='form-group'>
+        <label for='pagesInput'>Book Pages</label>
+            <br>
+            <input type='number' id='pagesInput' name='pages' min='1'>
+        </label>
+    </div>
+
+
+    <button type="submit" class="btn btn-dark">Add Book</button>
+    <a href="/viewbooks" class="btn btn-dark" role="button" aria-pressed="true">Book List</a>
+
+</form>
+{% endblock %}
