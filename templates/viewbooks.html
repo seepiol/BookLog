@@ -13,10 +13,11 @@
       <h5 class="card-title"><b>{{ book[1].upper() }}</b></h5>
       <p class="card-text">
         By {{ book[2].title() }}. {{ book[3] }} pages.<br>
+        Started on {{ book[5] }}<br>
         {% if book[4] == 'True' %}
             Not Finished
         {% else %}
-            Finished
+            Finished on {{ book[6] }}
         {% endif %}
     </p>
     <center>

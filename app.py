@@ -3,7 +3,7 @@
 # PROJECT: BOOKLOG
 
 from flask import Flask, render_template, request, redirect, url_for
-import os
+from datetime import date
 import sqlite3
 
 app = Flask(__name__)
@@ -16,6 +16,8 @@ try:
                 TITLE   TEXT    NOT NULL,
                 AUTHOR  TEXT    NOT NULL,
                 PAGES   INT     NOT NULL,
+                STARTDATE TEXT NOT NULL,
+                ENDDATE TEXT NOT NULL,
                 STATUS  TEXT    NOT NULL);"""
     )
 except:
@@ -32,9 +34,9 @@ def home():
 @app.route("/viewbooks")
 def viewbooks():
     bookList = []
-    cursor = conn.execute("SELECT ID, TITLE, AUTHOR, PAGES, STATUS FROM BOOKS")
+    cursor = conn.execute("SELECT ID, TITLE, AUTHOR, PAGES, STATUS, STARTDATE, ENDDATE FROM BOOKS")
     for row in cursor:
-        book = [row[0], row[1], row[2], row[3], row[4]]
+        book = [row[0], row[1], row[2], row[3], row[4], row[5], row[6]]
         bookList.append(book)
 
     return render_template("viewbooks.html", bookList=bookList)
@@ -45,12 +47,13 @@ def addBook():
     bookTitle = request.form.get("title")
     bookAuthor = request.form.get("author")
     bookPages = request.form.get("pages")
+    startDate = date.today()
 
     if not bookTitle or not bookAuthor or not bookPages:
         return render_template("fail.html")
     else:
         conn.execute(
-            f'INSERT INTO BOOKS (TITLE, AUTHOR, PAGES, STATUS)VALUES ("{bookTitle}", "{bookAuthor}", "{bookPages}", "True");'
+            f'INSERT INTO BOOKS (TITLE, AUTHOR, PAGES, STATUS, STARTDATE, ENDDATE)VALUES ("{bookTitle}", "{bookAuthor}", "{bookPages}", "True", "{startDate}", "");'
         )
         conn.commit()
         return render_template("success.html")
@@ -60,10 +63,16 @@ def addBook():
 def setBookStatus():
     bookId = request.args.get("bookid")
     currentStatus = request.args.get("currentstatus")
+    endDate = date.today()
+
     if currentStatus == "True":
         conn.execute(f'UPDATE BOOKS SET STATUS = "False" WHERE ID = {bookId}')
+        conn.execute(f'UPDATE BOOKS SET ENDDATE = "{endDate}" WHERE ID = {bookId}')
+
     elif currentStatus == "False":
         conn.execute(f'UPDATE BOOKS SET STATUS = "True" WHERE ID = {bookId}')
+
+    conn.commit()
     return redirect("/viewbooks")
 
 
